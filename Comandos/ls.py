@@ -19,20 +19,23 @@ def ls(op, directorioActual):
 
 
 def formato_ls(contenido, directorioActual):
-    max_len = max(len(item) for item in contenido)
-    columnas = 4
-    filas = len(contenido) // columnas + (1 if len(contenido) % columnas > 0 else 0)
+    try:
+        max_len = max(len(item) for item in contenido)
+        columnas = 4
+        filas = len(contenido) // columnas + (1 if len(contenido) % columnas > 0 else 0)
 
-    for i in range(filas):
-        row = []
-        for j in range(i, len(contenido), filas):
-            item = contenido[j]
-            item_path = os.getcwd()+directorioActual+ "/"+ item
-            if os.path.isdir(item_path):
-                row.append(f"{BOLD}{BLUE}{item:<{max_len}}{RESET}")
-            else:
-                row.append(f"{item:<{max_len}}{RESET}")
-        print("  ".join(row))
+        for i in range(filas):
+            row = []
+            for j in range(i, len(contenido), filas):
+                item = contenido[j]
+                item_path = os.getcwd()+directorioActual+ "/"+ item
+                if os.path.isdir(item_path):
+                    row.append(f"{BOLD}{BLUE}{item:<{max_len}}{RESET}")
+                else:
+                    row.append(f"{item:<{max_len}}{RESET}")
+            print("  ".join(row))
+    except Exception:
+        pass
 
 def lsParaMasArchivos(op, directorioActual, lsLen):
     listados = op.split(" ")
@@ -53,7 +56,7 @@ def lsParaMasArchivos(op, directorioActual, lsLen):
                 if os.path.exists(file):
                     print(f"{BOLD}{YELLOW}{l}{RESET} (no es un directorio):\n{l}")
                 else:
-                    print(f"'{l}' no existe")
+                    print(f"ls: '{l}' no existe")
     else:
         try:
             listado = os.listdir(os.getcwd() + directorioActual + "/" + listados[lsLen])
@@ -62,5 +65,4 @@ def lsParaMasArchivos(op, directorioActual, lsLen):
 
             formato_ls(listado, directorioActual+ "/" + listados[lsLen])
         except Exception:
-            print(listados[lsLen])
-
+            print(f"ls: no se puede listar el directorio '{listados[lsLen]}', no existe")
